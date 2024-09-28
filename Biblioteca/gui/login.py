@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
-
 from database.database import DatabaseConnection
 
 
@@ -64,8 +63,12 @@ class LoginFrame(tk.Frame):
         self.password = ttk.Entry(self.frame, show="*", width=30)
         self.password.grid(column=1, row=3, sticky=(tk.W, tk.E), pady=5)
 
-        ttk.Button(self.frame, text="Login", command=self.login).grid(column=0, row=4, columnspan=2, pady=(20, 10))
-        ttk.Button(self.frame, text="Register", command=self.show_register).grid(column=0, row=5, columnspan=2)
+        buttons_frame = ttk.Frame(self.frame)  # Crear un frame solo para los botones
+        buttons_frame.grid(column=0, row=4, columnspan=2, pady=(20, 10))  # Centrarlo con columnspan
+
+        # Agregar los botones dentro de este frame centrado
+        ttk.Button(buttons_frame, text="Login", command=self.login).grid(column=0, row=0, padx=(0, 10))  # Login a la izquierda con espacio a la derecha
+        ttk.Button(buttons_frame, text="Register", command=self.show_register).grid(column=1, row=0, padx=(10, 0))  # Register a la derecha con espacio a la izquierda
 
         self.message = ttk.Label(self.frame, text="")
         self.message.grid(column=0, row=6, columnspan=2, pady=(10, 0))
