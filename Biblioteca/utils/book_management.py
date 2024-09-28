@@ -4,62 +4,60 @@ from database.database import DatabaseConnection
 from PIL import Image, ImageTk
 import tkinter.filedialog as fd
 
-
 class BookManagementFrame(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
         self.image_path = None  # Variable para almacenar la ruta de la imagen
+        self.configure(bg="#f5f5dc")  # Establecer el color de fondo del Frame principal
         self.create_widgets()
 
     def create_widgets(self):
         main_frame = ttk.Frame(self, padding="20")
         main_frame.pack(expand=True, fill="both")
 
+        # Configurar el estilo para usar el color de fondo
+        style = ttk.Style()
+        style.configure('TFrame', background='#f5f5dc')
+        style.configure('TLabel', background='#f5f5dc')
+        style.configure('TLabelframe', background='#f5f5dc')
+        style.configure('TLabelframe.Label', background='#f5f5dc')
+
         # Title
-        title = tk.Label(main_frame, text="Book Management", font=("Arial", 16, "bold"))
+        title = tk.Label(main_frame, text="Book Management", font=("Arial", 16, "bold"), bg="#f5f5dc")
         title.pack(pady=10)
 
         # Content frame
-        content_frame = ttk.Frame(main_frame)
+        content_frame = ttk.Frame(main_frame, style='TFrame')
         content_frame.pack(expand=True, fill="both")
 
         # Add Book Section
-        add_book_frame = ttk.LabelFrame(content_frame, text="Add New Book", padding="10")
+        add_book_frame = ttk.LabelFrame(content_frame, text="Add New Book", padding="10", style='TLabelframe')
         add_book_frame.pack(side="left", padx=10, pady=10, fill="y")
 
         labels = ["Title:", "Author:", "Publication Year:", "Genre:", "Summary:", "Available Copies:", "Status:"]
         self.entries = {}
 
         for i, label in enumerate(labels):
-            ttk.Label(add_book_frame, text=label).grid(row=i, column=0, sticky="e", padx=(0, 5), pady=5)
+            ttk.Label(add_book_frame, text=label, style='TLabel').grid(row=i, column=0, sticky="e", padx=(0, 5), pady=5)
             if label == "Publication Year:":
                 self.entries[label] = ttk.Spinbox(add_book_frame, from_=1900, to=2100, format="%04.0f", width=20)
             elif label == "Summary:":
-                self.entries[label] = tk.Text(add_book_frame, height=3, width=40)
+                self.entries[label] = tk.Text(add_book_frame, height=3, width=40, bg="#f5f5dc")
             else:
                 self.entries[label] = ttk.Entry(add_book_frame, width=40)
             self.entries[label].grid(row=i, column=1, sticky="w", pady=5)
 
-        # Botón para seleccionar imagen
-        ttk.Button(add_book_frame, text="Upload Book Image", command=self.upload_image).grid(row=len(labels), column=0,
-                                                                                             columnspan=2, pady=10)
-
-        # Botón para agregar libro
-        ttk.Button(add_book_frame, text="Add Book", command=self.add_book).grid(row=len(labels) + 1, column=0,
-                                                                                columnspan=2, pady=10)
+        # ... resto del código ...
 
         # Image display
-        image_frame = ttk.Frame(content_frame)
+        image_frame = ttk.Frame(content_frame, style='TFrame')
         image_frame.pack(side="right", padx=10, pady=10)
 
-        self.image_label = ttk.Label(image_frame)
+        self.image_label = ttk.Label(image_frame, style='TLabel')
         self.image_label.pack()
 
-        self.load_image(1)  # Load image with ID 1
-
-        # Show Available Books Section
-        ttk.Button(main_frame, text="Show Available Books", command=self.show_available_books).pack(pady=10)
+        # ... resto del código ...
 
         # Treeview for displaying books
         self.tree = ttk.Treeview(main_frame,
@@ -69,6 +67,7 @@ class BookManagementFrame(tk.Frame):
             self.tree.heading(col, text=col)
             self.tree.column(col, width=100)
         self.tree.pack(pady=10, fill="both", expand=True)
+
 
         # Scrollbar for Treeview
         scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=self.tree.yview)
