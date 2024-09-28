@@ -3,7 +3,6 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 from PIL import Image, ImageTk
 import os
-
 from database.database import DatabaseConnection
 
 
@@ -41,39 +40,46 @@ class RegistrationFrame(tk.Frame):
         container = ttk.Frame(self)
         container.grid(row=0, column=0)
 
-        self.frame = ttk.Frame(container, padding="20")
-        self.frame.grid(row=0, column=0)
-
+        # Crear un estilo personalizado para el formulario de registro
         style = ttk.Style()
-        style.configure('TLabel', background='#f0f0f0')
-        style.configure('TFrame', background='#f0f0f0')
+        style.configure('Custom.TFrame', background='#f5f5dc')  # Color específico para el formulario
+        style.configure('Custom.TLabel', background='#f5f5dc')
 
-        ttk.Label(self.frame, text="Registration", font=("Arial", 20)).grid(column=0, row=0, columnspan=2, pady=(0, 20))
+        # Crear el frame principal del formulario con el color personalizado
+        self.form_frame = ttk.Frame(container, padding="20", style='Custom.TFrame')  # Aplicar el estilo al formulario
+        self.form_frame.grid(row=0, column=0, pady=20, padx=20)
+
+        # Título del formulario de registro con el nuevo estilo
+        ttk.Label(self.form_frame, text="Registration", font=("Arial", 20), style='Custom.TLabel').grid(column=0, row=0, columnspan=2, pady=(0, 20))
 
         self.fields = [
-            ("User Type",
-             ttk.Combobox(self.frame, values=['estudiante', 'directivo', 'docente', 'publico_general'], width=30)),
-            ("Name", ttk.Entry(self.frame, width=30)),
-            ("Surname", ttk.Entry(self.frame, width=30)),
-            ("Birth Date", DateEntry(self.frame, date_pattern='yyyy-mm-dd', width=28)),
-            ("Document Type", ttk.Combobox(self.frame, values=['CC', 'CE', 'PA', 'TI', 'PPT', 'PEP'], width=30)),
-            ("Document Number", ttk.Entry(self.frame, width=30)),
-            ("Email", ttk.Entry(self.frame, width=30)),
-            ("Password", ttk.Entry(self.frame, show="*", width=30)),
-            ("Phone", ttk.Entry(self.frame, width=30))
+            ("User Type", ttk.Combobox(self.form_frame, values=['estudiante', 'directivo', 'docente', 'publico_general'], width=30)),
+            ("Name", ttk.Entry(self.form_frame, width=30)),
+            ("Surname", ttk.Entry(self.form_frame, width=30)),
+            ("Birth Date", DateEntry(self.form_frame, date_pattern='yyyy-mm-dd', width=28)),
+            ("Document Type", ttk.Combobox(self.form_frame, values=['CC', 'CE', 'PA', 'TI', 'PPT', 'PEP'], width=30)),
+            ("Document Number", ttk.Entry(self.form_frame, width=30)),
+            ("Email", ttk.Entry(self.form_frame, width=30)),
+            ("Password", ttk.Entry(self.form_frame, show="*", width=30)),
+            ("Phone", ttk.Entry(self.form_frame, width=30))
         ]
 
         for i, (text, entry) in enumerate(self.fields, start=1):
-            ttk.Label(self.frame, text=text).grid(column=0, row=i, sticky=tk.W, pady=5)
+            # Aplicar el estilo a los labels de los campos del formulario
+            ttk.Label(self.form_frame, text=text, style='Custom.TLabel').grid(column=0, row=i, sticky=tk.W, pady=5)
             entry.grid(column=1, row=i, sticky=(tk.W, tk.E), pady=5)
             setattr(self, text.lower().replace(" ", "_"), entry)
 
-        ttk.Button(self.frame, text="Register", command=self.register).grid(column=0, row=len(self.fields) + 1,
-                                                                            columnspan=2, pady=(20, 10))
-        ttk.Button(self.frame, text="Back to Login", command=self.show_login).grid(column=0, row=len(self.fields) + 2,
-                                                                                   columnspan=2)
+        # Crear un contenedor para los botones dentro del formulario y centrarlos
+        buttons_frame = ttk.Frame(self.form_frame, style='Custom.TFrame')  # Aplicar el mismo color de fondo a los botones
+        buttons_frame.grid(column=0, row=len(self.fields) + 1, columnspan=2, pady=(20, 10))
 
-        self.message = ttk.Label(self.frame, text="")
+        # Agregar los botones dentro del contenedor centrado
+        ttk.Button(buttons_frame, text="Register", command=self.register).grid(column=0, row=0, padx=(0, 10))  # Botón Register con espacio a la derecha
+        ttk.Button(buttons_frame, text="Back to Login", command=self.show_login).grid(column=1, row=0, padx=(10, 0))  # Botón Back to Login con espacio a la izquierda
+
+        # Mensaje de éxito o error en el formulario con el nuevo estilo
+        self.message = ttk.Label(self.form_frame, text="", style='Custom.TLabel')
         self.message.grid(column=0, row=len(self.fields) + 3, columnspan=2, pady=(10, 0))
 
     def register(self):
